@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import { DemoVideo } from '../DemoVideo';
+import ImageCarousel from '../ImageCarousel/ImageCarousel';
 import './HomePage.css';
 
 function HomePage({ onNavigate }) {
-  const [showDemo, setShowDemo] = useState(false);
   const [animatedStats, setAnimatedStats] = useState({
     timeSaved: 0,
     profitIncrease: 0,
@@ -120,6 +120,9 @@ function HomePage({ onNavigate }) {
 
   return (
     <div className="home-page">
+      {/* Image Carousel */}
+      <ImageCarousel />
+
       {/* Hero Section */}
       <section className="hero-section">
         <div className="hero-content">
@@ -132,9 +135,6 @@ function HomePage({ onNavigate }) {
           <div className="hero-buttons">
             <button className="btn-primary" onClick={() => onNavigate?.('dashboard')}>
               <span>📦</span> Explore Dashboard
-            </button>
-            <button className="btn-secondary" onClick={() => setShowDemo(true)}>
-              <span>▶️</span> Watch Demo
             </button>
           </div>
           <div className="hero-stats">
@@ -179,6 +179,11 @@ function HomePage({ onNavigate }) {
             </div>
           </div>
         </div>
+      </section>
+
+      {/* Demo Video Section */}
+      <section className="demo-video-section">
+        <DemoVideo inline={true} />
       </section>
 
       {/* Features Section */}
@@ -238,9 +243,6 @@ function HomePage({ onNavigate }) {
           </button>
         </div>
       </section>
-
-      {/* Demo Video Modal */}
-      <DemoVideo isOpen={showDemo} onClose={() => setShowDemo(false)} />
     </div>
   );
 }
