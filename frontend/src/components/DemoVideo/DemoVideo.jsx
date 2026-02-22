@@ -255,7 +255,7 @@ function DemoVideo({ isOpen, onClose, inline = false }) {
             </div>
             <div className="stat-box">
               <div className="stat-icon">💰</div>
-              <div className="stat-number">$540K</div>
+              <div className="stat-number">₹540K</div>
               <div className="stat-label">Annual Savings</div>
             </div>
             <div className="stat-box">

@@ -252,7 +252,7 @@ function ExpiryDashboard({ isOpen, onClose }) {
           <div className="expiry-stat-card value-stat">
             <div className="stat-icon-wrapper value">💰</div>
             <div className="stat-content">
-              <div className="stat-number">${stats.totalValue}</div>
+              <div className="stat-number">₹{stats.totalValue}</div>
               <div className="stat-label">At Risk Value</div>
             </div>
           </div>
@@ -319,7 +319,7 @@ function ExpiryDashboard({ isOpen, onClose }) {
                       <span className="priority-indicator">{getPriorityIcon(product.priority)}</span>
                       {product.expiryDate}
                     </div>
-                    <div className="product-value">${product.value}</div>
+                    <div className="product-value">₹{product.value}</div>
                   </div>
                 </div>
               ))}
@@ -384,7 +384,7 @@ function ExpiryDashboard({ isOpen, onClose }) {
                         <span className="stat-label">Suggested Qty</span>
                       </div>
                       <div className="donation-stat highlight">
-                        <span className="stat-value">${product.taxBenefit}</span>
+                        <span className="stat-value">₹{product.taxBenefit}</span>
                         <span className="stat-label">Tax Benefit</span>
                       </div>
                     </div>
@@ -410,7 +410,7 @@ function ExpiryDashboard({ isOpen, onClose }) {
                 <div className="summary-item">
                   <span className="summary-icon">💵</span>
                   <div>
-                    <span className="summary-value">${filteredProducts.reduce((sum, p) => sum + p.taxBenefit, 0)}</span>
+                    <span className="summary-value">₹{filteredProducts.reduce((sum, p) => sum + p.taxBenefit, 0)}</span>
                     <span className="summary-label">Est. Tax Benefits</span>
                   </div>
                 </div>

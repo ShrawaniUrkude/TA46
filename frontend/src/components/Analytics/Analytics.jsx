@@ -154,9 +154,9 @@ function Analytics() {
         <div className="metric-card money">
           <div className="metric-icon">💰</div>
           <div className="metric-content">
-            <span className="metric-value">${(animatedValues.costSaved / 1000).toFixed(0)}K</span>
+            <span className="metric-value">₹{(animatedValues.costSaved / 1000).toFixed(0)}K</span>
             <span className="metric-label">Annual Cost Savings</span>
-            <span className="metric-change positive">↑ $125K vs last year</span>
+            <span className="metric-change positive">↑ ₹125K vs last year</span>
           </div>
         </div>
         <div className="metric-card orders">
@@ -336,16 +336,16 @@ function Analytics() {
               <div className="profit-comparison">
                 <div className="comparison-item">
                   <span className="label">Before</span>
-                  <span className="value old">$85,000/mo</span>
+                  <span className="value old">₹85,000/mo</span>
                 </div>
                 <div className="comparison-arrow">→</div>
                 <div className="comparison-item">
                   <span className="label">After</span>
-                  <span className="value new">$70,000/mo</span>
+                  <span className="value new">₹70,000/mo</span>
                 </div>
               </div>
               <div className="profit-savings">
-                <span className="savings-amount">$180,000</span>
+                <span className="savings-amount">₹180,000</span>
                 <span className="savings-period">saved annually</span>
               </div>
             </div>
@@ -360,12 +360,12 @@ function Analytics() {
               <div className="profit-comparison">
                 <div className="comparison-item">
                   <span className="label">6 mo ago</span>
-                  <span className="value old">$520K/mo</span>
+                  <span className="value old">₹520K/mo</span>
                 </div>
                 <div className="comparison-arrow">→</div>
                 <div className="comparison-item">
                   <span className="label">Current</span>
-                  <span className="value new">$652K/mo</span>
+                  <span className="value new">₹652K/mo</span>
                 </div>
               </div>
               <div className="profit-savings">
@@ -393,7 +393,7 @@ function Analytics() {
                 </div>
               </div>
               <div className="profit-savings">
-                <span className="savings-amount">$85,000</span>
+                <span className="savings-amount">₹85,000</span>
                 <span className="savings-period">saved in returns</span>
               </div>
             </div>
@@ -473,7 +473,7 @@ function Analytics() {
             <div className="insight-icon">✅</div>
             <div className="insight-content">
               <h4>ROI Achievement</h4>
-              <p>System paid for itself in <strong>4 months</strong>. Current ROI is <strong>180%</strong> with projected annual savings of <strong>$540K</strong>.</p>
+              <p>System paid for itself in <strong>4 months</strong>. Current ROI is <strong>180%</strong> with projected annual savings of <strong>₹540K</strong>.</p>
             </div>
           </div>
           <div className="insight-card info">
