@@ -4,6 +4,7 @@ import Footer from './components/Footer'
 import { WarehouseDashboard } from './components/Warehouse'
 import { HomePage } from './components/HomePage'
 import Analytics from './components/Analytics/Analytics'
+import HospitalDashboard from './components/HospitalDashboard'
 import './App.css'
 
 function App() {
@@ -22,6 +23,8 @@ function App() {
           <HomePage onNavigate={handleNavigate} />
         ) : currentPage === 'analytics' ? (
           <Analytics />
+        ) : currentPage === 'hospital' ? (
+          <HospitalDashboard />
         ) : (
           <WarehouseDashboard />
         )}
