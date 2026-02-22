@@ -1,4 +1,4 @@
-// Amazon-style warehouse layout configuration
+// Smart warehouse layout configuration
 export const warehouseConfig = {
   width: 900,
   height: 600,
