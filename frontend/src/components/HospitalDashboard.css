@@ -976,9 +976,10 @@
   gap: 16px;
   justify-content: center;
   padding: 16px;
-  background: rgba(30, 41, 59, 0.6);
+  background: #ffffff;
   border-radius: 12px;
   border: 1px solid #E5E7EB;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
 .eq-stat {
@@ -1047,56 +1048,116 @@
 .hospital-floor-map {
   flex: 1;
   position: relative;
-  background: #F9FAFB;
+  background: #ffffff;
   border-radius: 16px;
   border: 2px solid #E5E7EB;
-  min-height: 450px;
+  min-height: 500px;
   overflow: hidden;
-  padding: 20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
 }
 
-/* Floor Sections */
-.floor-section {
-  margin-bottom: 20px;
-  padding: 15px;
-  border-radius: 12px;
-  position: relative;
+/* SVG Map Styles */
+.hospital-svg-map {
+  width: 100%;
+  height: 100%;
+  min-height: 500px;
 }
 
-.ground-floor {
-  background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(239, 68, 68, 0.05));
-  border: 1px dashed rgba(239, 68, 68, 0.3);
-}
-
-.first-floor {
-  background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(59, 130, 246, 0.05));
-  border: 1px dashed rgba(59, 130, 246, 0.3);
-}
-
-.second-floor {
-  background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(139, 92, 246, 0.05));
-  border: 1px dashed rgba(139, 92, 246, 0.3);
-}
-
-.floor-label {
-  position: absolute;
-  top: -10px;
-  left: 20px;
-  background: #ffffff;
-  padding: 4px 12px;
-  font-size: 0.75rem;
+.hospital-svg-map .room-label {
+  font-size: 12px;
   font-weight: 600;
-  color: #374151;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  border-radius: 4px;
-  border: 1px solid #E5E7EB;
+  fill: #1F2937;
 }
 
-.floor-rooms {
-  display: flex;
-  gap: 12px;
-  margin-top: 10px;
+.hospital-svg-map .room-sublabel {
+  font-size: 9px;
+  fill: #6B7280;
+}
+
+.hospital-svg-map .room-count {
+  font-size: 10px;
+  font-weight: 600;
+  fill: #374151;
+}
+
+.hospital-svg-map .corridor-label {
+  font-size: 11px;
+  fill: #92400E;
+  font-weight: 500;
+  letter-spacing: 2px;
+}
+
+.hospital-svg-map .floor-indicator {
+  font-size: 10px;
+  fill: #ffffff;
+  font-weight: 600;
+}
+
+.hospital-svg-map .desk-label,
+.hospital-svg-map .seat-label {
+  font-size: 9px;
+  fill: #3B82F6;
+}
+
+.hospital-svg-map .storage-label,
+.hospital-svg-map .equip-label,
+.hospital-svg-map .table-label {
+  font-size: 9px;
+  fill: #374151;
+}
+
+.hospital-svg-map .compass-label {
+  font-size: 10px;
+  fill: #374151;
+  font-weight: 600;
+}
+
+/* Equipment Markers in SVG */
+.equipment-marker-svg {
+  transition: all 0.3s ease;
+}
+
+.equipment-marker-svg .marker-circle {
+  transition: all 0.3s ease;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+}
+
+.equipment-marker-svg:hover .marker-circle {
+  r: 16;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+}
+
+.equipment-marker-svg.selected .marker-circle {
+  filter: drop-shadow(0 0 10px rgba(59, 130, 246, 0.5));
+  animation: pulse-svg 1.5s infinite;
+}
+
+@keyframes pulse-svg {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.8; }
+}
+
+.equipment-marker-svg .marker-icon-svg {
+  font-size: 10px;
+  pointer-events: none;
+}
+
+.equipment-marker-svg .marker-alert-svg {
+  font-size: 10px;
+}
+
+.equipment-marker-svg.maintenance .marker-circle {
+  opacity: 0.7;
+}
+
+.equipment-marker-svg.in-use .marker-circle {
+  stroke-dasharray: 4;
+  animation: rotate-dash 2s linear infinite;
+}
+
+@keyframes rotate-dash {
+  to { stroke-dashoffset: 24; }
+}
 }
 
 .room {
@@ -1191,16 +1252,19 @@
 
 /* Equipment Legend */
 .equipment-legend {
-  width: 200px;
+  width: 220px;
   background: #ffffff;
   border-radius: 12px;
   padding: 16px;
   border: 1px solid #E5E7EB;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  max-height: 520px;
+  overflow-y: auto;
 }
 
 .equipment-legend h4 {
   color: #1F2937;
-  font-size: 1rem;
+  font-size: 0.95rem;
   margin-bottom: 12px;
   padding-bottom: 8px;
   border-bottom: 1px solid #E5E7EB;
@@ -1209,7 +1273,7 @@
 .legend-items {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
   margin-bottom: 16px;
 }
 
@@ -1217,34 +1281,57 @@
   display: flex;
   align-items: center;
   gap: 10px;
+  padding: 6px 8px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.legend-item:hover {
+  background: #F3F4F6;
 }
 
 .legend-icon {
-  width: 28px;
-  height: 28px;
+  width: 26px;
+  height: 26px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
+  flex-shrink: 0;
 }
 
 .legend-label {
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   color: #374151;
+  flex: 1;
 }
 
-.legend-status h5 {
-  font-size: 0.85rem;
+.legend-count {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #6B7280;
+  background: #F3F4F6;
+  padding: 2px 8px;
+  border-radius: 10px;
+}
+
+.legend-status h5,
+.legend-rooms h5 {
+  font-size: 0.8rem;
   color: #6B7280;
   margin-bottom: 10px;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid #E5E7EB;
 }
 
 .status-item {
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   color: #374151;
   margin-bottom: 6px;
 }
@@ -1257,6 +1344,28 @@
 
 .status-dot.available { background: #10B981; }
 .status-dot.in-use { background: #3B82F6; }
+.status-dot.maintenance { background: #F59E0B; }
+
+/* Room Colors Legend */
+.legend-rooms {
+  margin-top: 8px;
+}
+
+.room-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.72rem;
+  color: #374151;
+  margin-bottom: 5px;
+}
+
+.room-color {
+  width: 16px;
+  height: 12px;
+  border-radius: 3px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
 .status-dot.maintenance { background: #F59E0B; }
 
 /* Equipment Details Panel */

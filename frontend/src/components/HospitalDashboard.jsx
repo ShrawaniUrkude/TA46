@@ -595,86 +595,269 @@ function HospitalDashboard() {
                 </button>
               </div>
 
-              {/* Hospital Floor Map */}
+              {/* Hospital Floor Map - Real SVG Visualization */}
               <div className="hospital-map-container">
                 <div className="hospital-floor-map">
-                  {/* Floor Labels */}
-                  <div className="floor-section ground-floor">
-                    <div className="floor-label">Ground Floor</div>
-                    <div className="floor-rooms">
-                      <div className="room emergency">
-                        <span className="room-name">Emergency</span>
-                      </div>
-                      <div className="room storage">
-                        <span className="room-name">Storage</span>
-                      </div>
-                      <div className="room reception">
-                        <span className="room-name">Reception</span>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="floor-section first-floor">
-                    <div className="floor-label">1st Floor</div>
-                    <div className="floor-rooms">
-                      <div className="room icu">
-                        <span className="room-name">ICU</span>
-                      </div>
-                      <div className="room general-ward">
-                        <span className="room-name">General Ward</span>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="floor-section second-floor">
-                    <div className="floor-label">2nd Floor</div>
-                    <div className="floor-rooms">
-                      <div className="room surgery">
-                        <span className="room-name">Surgery</span>
-                      </div>
-                      <div className="room maternity">
-                        <span className="room-name">Maternity</span>
-                      </div>
-                      <div className="room pediatrics">
-                        <span className="room-name">Pediatrics</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Equipment Markers */}
-                  {filteredEquipment.map(eq => (
-                    <div
-                      key={eq.id}
-                      className={`equipment-marker ${eq.status} ${selectedEquipment?.id === eq.id ? 'selected' : ''}`}
-                      style={{
-                        left: `${eq.x}px`,
-                        top: `${eq.y}px`,
-                        backgroundColor: equipmentTypes[eq.type].color
-                      }}
-                      onClick={() => setSelectedEquipment(eq)}
-                      title={`${eq.name} - ${eq.location}`}
-                    >
-                      <span className="marker-icon">{equipmentTypes[eq.type].icon}</span>
-                      {eq.status === 'maintenance' && <span className="marker-alert">⚠️</span>}
-                      {eq.type === 'oxygen' && eq.level < 30 && <span className="marker-alert">🔴</span>}
-                    </div>
-                  ))}
+                  <svg viewBox="0 0 800 500" className="hospital-svg-map">
+                    {/* Background Grid */}
+                    <defs>
+                      <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
+                        <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#E5E7EB" strokeWidth="0.5"/>
+                      </pattern>
+                      <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+                        <feDropShadow dx="2" dy="2" stdDeviation="3" floodOpacity="0.15"/>
+                      </filter>
+                    </defs>
+                    <rect width="800" height="500" fill="url(#grid)"/>
+                    
+                    {/* Hospital Building Outline */}
+                    <rect x="20" y="20" width="760" height="460" fill="#F8FAFC" stroke="#94A3B8" strokeWidth="3" rx="8"/>
+                    
+                    {/* Main Corridor */}
+                    <rect x="350" y="20" width="100" height="460" fill="#FEF3C7" stroke="#F59E0B" strokeWidth="1" strokeDasharray="5,5"/>
+                    <text x="400" y="250" textAnchor="middle" className="corridor-label" transform="rotate(-90, 400, 250)">Main Corridor</text>
+                    
+                    {/* GROUND FLOOR - Left Side */}
+                    <g className="floor-group ground-floor-rooms">
+                      {/* Emergency Room */}
+                      <rect x="30" y="30" width="150" height="140" fill="#FEE2E2" stroke="#EF4444" strokeWidth="2" rx="4" filter="url(#shadow)"/>
+                      <text x="105" y="55" textAnchor="middle" className="room-label emergency-label">🚨 Emergency</text>
+                      <text x="105" y="75" textAnchor="middle" className="room-sublabel">Critical Care</text>
+                      {/* Beds visualization */}
+                      <rect x="40" y="90" width="30" height="15" fill="#fff" stroke="#EF4444" rx="2"/>
+                      <rect x="80" y="90" width="30" height="15" fill="#fff" stroke="#EF4444" rx="2"/>
+                      <rect x="120" y="90" width="30" height="15" fill="#fff" stroke="#EF4444" rx="2"/>
+                      <rect x="40" y="115" width="30" height="15" fill="#fff" stroke="#EF4444" rx="2"/>
+                      <rect x="80" y="115" width="30" height="15" fill="#fff" stroke="#EF4444" rx="2"/>
+                      <rect x="120" y="115" width="30" height="15" fill="#fff" stroke="#EF4444" rx="2"/>
+                      <rect x="40" y="140" width="130" height="20" fill="#FECACA" rx="2"/>
+                      <text x="105" y="154" textAnchor="middle" className="room-count">6 Beds</text>
+                      
+                      {/* Reception */}
+                      <rect x="190" y="30" width="150" height="100" fill="#DBEAFE" stroke="#3B82F6" strokeWidth="2" rx="4" filter="url(#shadow)"/>
+                      <text x="265" y="55" textAnchor="middle" className="room-label">🏥 Reception</text>
+                      <text x="265" y="75" textAnchor="middle" className="room-sublabel">Patient Registration</text>
+                      <rect x="200" y="90" width="60" height="30" fill="#fff" stroke="#3B82F6" rx="2"/>
+                      <text x="230" y="110" textAnchor="middle" className="desk-label">Desk</text>
+                      <circle cx="300" cy="105" r="12" fill="#BFDBFE" stroke="#3B82F6"/>
+                      <text x="300" y="110" textAnchor="middle" className="seat-label">🪑</text>
+                      
+                      {/* Storage */}
+                      <rect x="30" y="180" width="150" height="130" fill="#E5E7EB" stroke="#6B7280" strokeWidth="2" rx="4" filter="url(#shadow)"/>
+                      <text x="105" y="205" textAnchor="middle" className="room-label">📦 Storage</text>
+                      <text x="105" y="225" textAnchor="middle" className="room-sublabel">Equipment &amp; Supplies</text>
+                      {/* Shelves */}
+                      <rect x="40" y="240" width="60" height="10" fill="#9CA3AF" rx="1"/>
+                      <rect x="40" y="260" width="60" height="10" fill="#9CA3AF" rx="1"/>
+                      <rect x="40" y="280" width="60" height="10" fill="#9CA3AF" rx="1"/>
+                      <rect x="110" y="240" width="60" height="50" fill="#D1D5DB" stroke="#6B7280" rx="2"/>
+                      <text x="140" y="270" textAnchor="middle" className="storage-label">Rack</text>
+                      
+                      {/* Pharmacy */}
+                      <rect x="190" y="140" width="150" height="100" fill="#DCFCE7" stroke="#10B981" strokeWidth="2" rx="4" filter="url(#shadow)"/>
+                      <text x="265" y="165" textAnchor="middle" className="room-label">💊 Pharmacy</text>
+                      <rect x="200" y="185" width="130" height="40" fill="#BBF7D0" stroke="#10B981" rx="2"/>
+                      <text x="265" y="210" textAnchor="middle" className="room-sublabel">Medicine Counter</text>
+                    </g>
+                    
+                    {/* 1ST FLOOR - Middle Section */}
+                    <g className="floor-group first-floor-rooms">
+                      {/* ICU */}
+                      <rect x="30" y="320" width="200" height="150" fill="#FEF9C3" stroke="#F59E0B" strokeWidth="2" rx="4" filter="url(#shadow)"/>
+                      <text x="130" y="345" textAnchor="middle" className="room-label icu-label">🫀 ICU</text>
+                      <text x="130" y="365" textAnchor="middle" className="room-sublabel">Intensive Care Unit</text>
+                      {/* ICU beds with monitors */}
+                      <rect x="40" y="380" width="40" height="25" fill="#fff" stroke="#F59E0B" rx="2"/>
+                      <rect x="50" y="375" width="20" height="5" fill="#F59E0B"/>
+                      <rect x="95" y="380" width="40" height="25" fill="#fff" stroke="#F59E0B" rx="2"/>
+                      <rect x="105" y="375" width="20" height="5" fill="#F59E0B"/>
+                      <rect x="150" y="380" width="40" height="25" fill="#fff" stroke="#F59E0B" rx="2"/>
+                      <rect x="160" y="375" width="20" height="5" fill="#F59E0B"/>
+                      <rect x="40" y="420" width="40" height="25" fill="#fff" stroke="#F59E0B" rx="2"/>
+                      <rect x="95" y="420" width="40" height="25" fill="#fff" stroke="#F59E0B" rx="2"/>
+                      <rect x="150" y="420" width="40" height="25" fill="#fff" stroke="#F59E0B" rx="2"/>
+                      <rect x="200" y="380" width="20" height="70" fill="#FEF08A" stroke="#F59E0B" rx="2"/>
+                      <text x="210" y="420" textAnchor="middle" className="equip-label" transform="rotate(-90, 210, 420)">Monitors</text>
+                      
+                      {/* General Ward */}
+                      <rect x="240" y="250" width="100" height="220" fill="#E0E7FF" stroke="#6366F1" strokeWidth="2" rx="4" filter="url(#shadow)"/>
+                      <text x="290" y="275" textAnchor="middle" className="room-label">🛏️ General Ward</text>
+                      {/* Ward beds */}
+                      <rect x="250" y="295" width="35" height="18" fill="#fff" stroke="#6366F1" rx="2"/>
+                      <rect x="295" y="295" width="35" height="18" fill="#fff" stroke="#6366F1" rx="2"/>
+                      <rect x="250" y="325" width="35" height="18" fill="#fff" stroke="#6366F1" rx="2"/>
+                      <rect x="295" y="325" width="35" height="18" fill="#fff" stroke="#6366F1" rx="2"/>
+                      <rect x="250" y="355" width="35" height="18" fill="#fff" stroke="#6366F1" rx="2"/>
+                      <rect x="295" y="355" width="35" height="18" fill="#fff" stroke="#6366F1" rx="2"/>
+                      <rect x="250" y="385" width="35" height="18" fill="#fff" stroke="#6366F1" rx="2"/>
+                      <rect x="295" y="385" width="35" height="18" fill="#fff" stroke="#6366F1" rx="2"/>
+                      <rect x="250" y="420" width="80" height="40" fill="#C7D2FE" rx="2"/>
+                      <text x="290" y="445" textAnchor="middle" className="room-count">8 Beds</text>
+                    </g>
+                    
+                    {/* 2ND FLOOR - Right Side */}
+                    <g className="floor-group second-floor-rooms">
+                      {/* Surgery */}
+                      <rect x="460" y="30" width="160" height="150" fill="#F3E8FF" stroke="#8B5CF6" strokeWidth="2" rx="4" filter="url(#shadow)"/>
+                      <text x="540" y="55" textAnchor="middle" className="room-label surgery-label">🔪 Surgery</text>
+                      <text x="540" y="75" textAnchor="middle" className="room-sublabel">Operating Theater</text>
+                      {/* Surgery table */}
+                      <ellipse cx="540" cy="120" rx="50" ry="25" fill="#DDD6FE" stroke="#8B5CF6" strokeWidth="2"/>
+                      <text x="540" y="125" textAnchor="middle" className="table-label">OT Table</text>
+                      <circle cx="480" cy="90" r="10" fill="#A78BFA"/>
+                      <circle cx="600" cy="90" r="10" fill="#A78BFA"/>
+                      <circle cx="480" cy="150" r="10" fill="#A78BFA"/>
+                      <circle cx="600" cy="150" r="10" fill="#A78BFA"/>
+                      
+                      {/* Maternity */}
+                      <rect x="630" y="30" width="140" height="150" fill="#FCE7F3" stroke="#EC4899" strokeWidth="2" rx="4" filter="url(#shadow)"/>
+                      <text x="700" y="55" textAnchor="middle" className="room-label">👶 Maternity</text>
+                      <text x="700" y="75" textAnchor="middle" className="room-sublabel">Labor &amp; Delivery</text>
+                      <rect x="640" y="95" width="50" height="30" fill="#fff" stroke="#EC4899" rx="2"/>
+                      <rect x="710" y="95" width="50" height="30" fill="#fff" stroke="#EC4899" rx="2"/>
+                      <rect x="640" y="135" width="50" height="30" fill="#fff" stroke="#EC4899" rx="2"/>
+                      <rect x="710" y="135" width="50" height="30" fill="#fff" stroke="#EC4899" rx="2"/>
+                      
+                      {/* Pediatrics */}
+                      <rect x="460" y="190" width="160" height="130" fill="#CFFAFE" stroke="#14B8A6" strokeWidth="2" rx="4" filter="url(#shadow)"/>
+                      <text x="540" y="215" textAnchor="middle" className="room-label">🧒 Pediatrics</text>
+                      <text x="540" y="235" textAnchor="middle" className="room-sublabel">Children's Ward</text>
+                      <rect x="470" y="255" width="35" height="20" fill="#fff" stroke="#14B8A6" rx="2"/>
+                      <rect x="515" y="255" width="35" height="20" fill="#fff" stroke="#14B8A6" rx="2"/>
+                      <rect x="560" y="255" width="35" height="20" fill="#fff" stroke="#14B8A6" rx="2"/>
+                      <rect x="470" y="285" width="35" height="20" fill="#fff" stroke="#14B8A6" rx="2"/>
+                      <rect x="515" y="285" width="35" height="20" fill="#fff" stroke="#14B8A6" rx="2"/>
+                      <rect x="560" y="285" width="35" height="20" fill="#fff" stroke="#14B8A6" rx="2"/>
+                      
+                      {/* Lab */}
+                      <rect x="630" y="190" width="140" height="130" fill="#FEF3C7" stroke="#D97706" strokeWidth="2" rx="4" filter="url(#shadow)"/>
+                      <text x="700" y="215" textAnchor="middle" className="room-label">🔬 Laboratory</text>
+                      <rect x="640" y="240" width="50" height="35" fill="#FDE68A" stroke="#D97706" rx="2"/>
+                      <text x="665" y="262" textAnchor="middle" className="equip-label">🧪</text>
+                      <rect x="700" y="240" width="60" height="35" fill="#FDE68A" stroke="#D97706" rx="2"/>
+                      <text x="730" y="262" textAnchor="middle" className="equip-label">🖥️</text>
+                      <rect x="640" y="285" width="120" height="25" fill="#FEF3C7" stroke="#D97706" rx="2"/>
+                      <text x="700" y="302" textAnchor="middle" className="room-sublabel">Sample Counter</text>
+                      
+                      {/* Radiology */}
+                      <rect x="460" y="330" width="150" height="140" fill="#E0F2FE" stroke="#0284C7" strokeWidth="2" rx="4" filter="url(#shadow)"/>
+                      <text x="535" y="355" textAnchor="middle" className="room-label">📡 Radiology</text>
+                      <text x="535" y="375" textAnchor="middle" className="room-sublabel">X-Ray &amp; MRI</text>
+                      <rect x="475" y="395" width="60" height="50" fill="#BAE6FD" stroke="#0284C7" rx="4"/>
+                      <text x="505" y="425" textAnchor="middle" className="equip-label">MRI</text>
+                      <rect x="545" y="395" width="50" height="50" fill="#BAE6FD" stroke="#0284C7" rx="4"/>
+                      <text x="570" y="425" textAnchor="middle" className="equip-label">X-Ray</text>
+                      
+                      {/* Cafeteria */}
+                      <rect x="620" y="330" width="150" height="140" fill="#FEF7CD" stroke="#A3A31A" strokeWidth="2" rx="4" filter="url(#shadow)"/>
+                      <text x="695" y="355" textAnchor="middle" className="room-label">🍽️ Cafeteria</text>
+                      <circle cx="655" cy="400" r="20" fill="#fff" stroke="#A3A31A"/>
+                      <circle cx="695" cy="400" r="20" fill="#fff" stroke="#A3A31A"/>
+                      <circle cx="735" cy="400" r="20" fill="#fff" stroke="#A3A31A"/>
+                      <circle cx="655" cy="445" r="20" fill="#fff" stroke="#A3A31A"/>
+                      <circle cx="695" cy="445" r="20" fill="#fff" stroke="#A3A31A"/>
+                      <circle cx="735" cy="445" r="20" fill="#fff" stroke="#A3A31A"/>
+                    </g>
+                    
+                    {/* Equipment Markers */}
+                    {filteredEquipment.map(eq => {
+                      // Map equipment to realistic positions based on location
+                      const locationMap = {
+                        'Emergency': { x: 105, y: 100 },
+                        'Reception': { x: 265, y: 95 },
+                        'Storage': { x: 105, y: 260 },
+                        'ICU': { x: 130, y: 400 },
+                        'General Ward': { x: 290, y: 360 },
+                        'Surgery': { x: 540, y: 120 },
+                        'Maternity': { x: 700, y: 115 },
+                        'Pediatrics': { x: 540, y: 270 },
+                        'Laboratory': { x: 700, y: 250 },
+                        'Radiology': { x: 535, y: 420 },
+                        'Cafeteria': { x: 695, y: 420 }
+                      }
+                      const basePos = locationMap[eq.location] || { x: 400, y: 250 }
+                      // Add small offset based on equipment id to prevent overlap
+                      const offset = ((eq.id % 5) - 2) * 18
+                      const yOffset = Math.floor((eq.id % 3) - 1) * 20
+                      
+                      return (
+                        <g 
+                          key={eq.id} 
+                          className={`equipment-marker-svg ${eq.status} ${selectedEquipment?.id === eq.id ? 'selected' : ''}`}
+                          onClick={() => setSelectedEquipment(eq)}
+                          style={{ cursor: 'pointer' }}
+                        >
+                          <circle 
+                            cx={basePos.x + offset} 
+                            cy={basePos.y + yOffset} 
+                            r={selectedEquipment?.id === eq.id ? 16 : 12}
+                            fill={equipmentTypes[eq.type].color}
+                            stroke={selectedEquipment?.id === eq.id ? '#fff' : 'rgba(255,255,255,0.5)'}
+                            strokeWidth={selectedEquipment?.id === eq.id ? 3 : 2}
+                            className="marker-circle"
+                          />
+                          <text 
+                            x={basePos.x + offset} 
+                            y={basePos.y + yOffset + 4} 
+                            textAnchor="middle" 
+                            className="marker-icon-svg"
+                          >
+                            {equipmentTypes[eq.type].icon}
+                          </text>
+                          {eq.status === 'maintenance' && (
+                            <text x={basePos.x + offset + 10} y={basePos.y + yOffset - 8} className="marker-alert-svg">⚠️</text>
+                          )}
+                          {eq.type === 'oxygen' && eq.level < 30 && (
+                            <circle cx={basePos.x + offset + 10} cy={basePos.y + yOffset - 10} r="5" fill="#EF4444"/>
+                          )}
+                        </g>
+                      )
+                    })}
+                    
+                    {/* Floor Labels on Corridor */}
+                    <rect x="355" y="50" width="90" height="25" fill="#10B981" rx="4"/>
+                    <text x="400" y="67" textAnchor="middle" className="floor-indicator">Ground Floor</text>
+                    <rect x="355" y="300" width="90" height="25" fill="#3B82F6" rx="4"/>
+                    <text x="400" y="317" textAnchor="middle" className="floor-indicator">1st Floor</text>
+                    <rect x="355" y="450" width="90" height="25" fill="#8B5CF6" rx="4"/>
+                    <text x="400" y="467" textAnchor="middle" className="floor-indicator">2nd Floor</text>
+                    
+                    {/* Compass Rose */}
+                    <g transform="translate(750, 460)">
+                      <circle r="18" fill="#fff" stroke="#94A3B8" strokeWidth="1"/>
+                      <text y="-5" textAnchor="middle" className="compass-label">N</text>
+                      <polygon points="0,-12 4,-4 -4,-4" fill="#EF4444"/>
+                      <polygon points="0,12 4,4 -4,4" fill="#94A3B8"/>
+                    </g>
+                  </svg>
                 </div>
 
                 {/* Equipment Legend */}
                 <div className="equipment-legend">
-                  <h4>Legend</h4>
+                  <h4>Equipment Types</h4>
                   <div className="legend-items">
                     {Object.entries(equipmentTypes).map(([key, value]) => (
-                      <div key={key} className="legend-item">
+                      <div key={key} className="legend-item" onClick={() => setEquipmentFilter(equipmentFilter === key ? 'all' : key)}>
                         <span className="legend-icon" style={{ backgroundColor: value.color }}>{value.icon}</span>
                         <span className="legend-label">{value.label}</span>
+                        <span className="legend-count">{hospitalEquipment.filter(e => e.type === key).length}</span>
                       </div>
                     ))}
                   </div>
                   <div className="legend-status">
-                    <h5>Status</h5>
+                    <h5>Status Indicators</h5>
                     <div className="status-item"><span className="status-dot available"></span> Available</div>
                     <div className="status-item"><span className="status-dot in-use"></span> In Use</div>
                     <div className="status-item"><span className="status-dot maintenance"></span> Maintenance</div>
+                  </div>
+                  <div className="legend-rooms">
+                    <h5>Room Colors</h5>
+                    <div className="room-legend-item"><span className="room-color" style={{background: '#FEE2E2'}}></span> Emergency</div>
+                    <div className="room-legend-item"><span className="room-color" style={{background: '#FEF9C3'}}></span> ICU</div>
+                    <div className="room-legend-item"><span className="room-color" style={{background: '#F3E8FF'}}></span> Surgery</div>
+                    <div className="room-legend-item"><span className="room-color" style={{background: '#E0E7FF'}}></span> General Ward</div>
+                    <div className="room-legend-item"><span className="room-color" style={{background: '#FCE7F3'}}></span> Maternity</div>
+                    <div className="room-legend-item"><span className="room-color" style={{background: '#CFFAFE'}}></span> Pediatrics</div>
                   </div>
                 </div>
               </div>

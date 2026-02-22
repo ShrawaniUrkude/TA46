@@ -147,7 +147,7 @@ export function AIAssistant({ isOpen, onClose }) {
                 <div className="distribution-bars">
                   <div className="bar-item">
                     <div className="bar-label">
-                      <span>High Stock (>100)</span>
+                      <span>High Stock (&gt;100)</span>
                       <span className="bar-count">{analyzedData.highStock.length}</span>
                     </div>
                     <div className="bar-container">
