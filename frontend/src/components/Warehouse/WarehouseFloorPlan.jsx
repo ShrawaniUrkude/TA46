@@ -2,6 +2,38 @@ import { useState, useEffect } from 'react';
 import { warehouseConfig, warehouseSections, racks, categoryColors } from '../../data/warehouse';
 import './WarehouseFloorPlan.css';
 
+// Equipment data with real-time positions
+const warehouseEquipment = [
+  { id: 'FL-001', type: 'forklift', name: 'Forklift #1', x: 150, y: 450, status: 'active', operator: 'John D.', battery: 85 },
+  { id: 'FL-002', type: 'forklift', name: 'Forklift #2', x: 550, y: 150, status: 'active', operator: 'Mike S.', battery: 62 },
+  { id: 'FL-003', type: 'forklift', name: 'Forklift #3', x: 680, y: 380, status: 'idle', operator: 'Unassigned', battery: 100 },
+  { id: 'PJ-001', type: 'pallet_jack', name: 'Pallet Jack #1', x: 250, y: 280, status: 'active', operator: 'Sarah L.', battery: 74 },
+  { id: 'PJ-002', type: 'pallet_jack', name: 'Pallet Jack #2', x: 420, y: 350, status: 'active', operator: 'Tom R.', battery: 91 },
+  { id: 'PJ-003', type: 'pallet_jack', name: 'Pallet Jack #3', x: 180, y: 180, status: 'maintenance', operator: 'N/A', battery: 0 },
+  { id: 'DT-001', type: 'diagnostic_tool', name: 'Scanner Pro X1', x: 380, y: 200, status: 'active', operator: 'Lisa K.', battery: 58 },
+  { id: 'DT-002', type: 'diagnostic_tool', name: 'Inventory Scanner', x: 480, y: 420, status: 'active', operator: 'James W.', battery: 43 },
+  { id: 'DT-003', type: 'diagnostic_tool', name: 'Barcode Reader', x: 320, y: 130, status: 'charging', operator: 'N/A', battery: 25 },
+];
+
+const equipmentIcons = {
+  forklift: '🚜',
+  pallet_jack: '🏗️',
+  diagnostic_tool: '📱'
+};
+
+const equipmentColors = {
+  forklift: '#F59E0B',
+  pallet_jack: '#8B5CF6',
+  diagnostic_tool: '#06B6D4'
+};
+
+const statusColors = {
+  active: '#10B981',
+  idle: '#6B7280',
+  maintenance: '#EF4444',
+  charging: '#3B82F6'
+};
+
 function WarehouseFloorPlan({ 
   selectedProduct, 
   path, 
@@ -11,6 +43,26 @@ function WarehouseFloorPlan({
 }) {
   const { width, height } = warehouseConfig;
   const [hoveredRack, setHoveredRack] = useState(null);
+  const [hoveredEquipment, setHoveredEquipment] = useState(null);
+  const [showEquipment, setShowEquipment] = useState(true);
+  const [equipment, setEquipment] = useState(warehouseEquipment);
+
+  // Simulate equipment movement
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setEquipment(prev => prev.map(eq => {
+        if (eq.status === 'active') {
+          return {
+            ...eq,
+            x: Math.max(120, Math.min(680, eq.x + (Math.random() - 0.5) * 10)),
+            y: Math.max(120, Math.min(480, eq.y + (Math.random() - 0.5) * 10))
+          };
+        }
+        return eq;
+      }));
+    }, 2000);
+    return () => clearInterval(interval);
+  }, []);
 
   // Create path string for SVG
   const pathString = path.length > 0 
@@ -177,6 +229,82 @@ function WarehouseFloorPlan({
             </text>
           ))}
 
+          {/* Equipment tracking markers */}
+          {showEquipment && equipment.map(eq => {
+            const isHovered = hoveredEquipment === eq.id;
+            return (
+              <g 
+                key={eq.id}
+                className={`equipment-marker ${eq.status}`}
+                onMouseEnter={() => setHoveredEquipment(eq.id)}
+                onMouseLeave={() => setHoveredEquipment(null)}
+                style={{ cursor: 'pointer' }}
+              >
+                {/* Equipment pulse ring */}
+                <circle
+                  cx={eq.x}
+                  cy={eq.y}
+                  r={isHovered ? 24 : 18}
+                  fill={equipmentColors[eq.type]}
+                  fillOpacity="0.2"
+                  className={eq.status === 'active' ? 'equipment-pulse' : ''}
+                />
+                {/* Status ring */}
+                <circle
+                  cx={eq.x}
+                  cy={eq.y}
+                  r="14"
+                  fill={equipmentColors[eq.type]}
+                  stroke={statusColors[eq.status]}
+                  strokeWidth="3"
+                />
+                {/* Equipment icon */}
+                <text
+                  x={eq.x}
+                  y={eq.y + 5}
+                  textAnchor="middle"
+                  fontSize="12"
+                >
+                  {equipmentIcons[eq.type]}
+                </text>
+                
+                {/* Tooltip on hover */}
+                {isHovered && (
+                  <g className="equipment-tooltip">
+                    <rect
+                      x={eq.x + 20}
+                      y={eq.y - 50}
+                      width="130"
+                      height="85"
+                      fill="#1F2937"
+                      fillOpacity="0.95"
+                      rx="6"
+                    />
+                    <text x={eq.x + 30} y={eq.y - 32} fill="#fff" fontSize="10" fontWeight="600">{eq.name}</text>
+                    <text x={eq.x + 30} y={eq.y - 18} fill="#9CA3AF" fontSize="9">ID: {eq.id}</text>
+                    <text x={eq.x + 30} y={eq.y - 4} fill="#9CA3AF" fontSize="9">Operator: {eq.operator}</text>
+                    <text x={eq.x + 30} y={eq.y + 10} fill={statusColors[eq.status]} fontSize="9" fontWeight="500">
+                      Status: {eq.status.charAt(0).toUpperCase() + eq.status.slice(1)}
+                    </text>
+                    <text x={eq.x + 30} y={eq.y + 24} fill="#9CA3AF" fontSize="9">
+                      Battery: {eq.battery}%
+                    </text>
+                    {/* Battery bar */}
+                    <rect x={eq.x + 85} y={eq.y + 16} width="50" height="6" fill="#374151" rx="3" />
+                    <rect 
+                      x={eq.x + 85} 
+                      y={eq.y + 16} 
+                      width={eq.battery / 2} 
+                      height="6" 
+                      fill={eq.battery > 50 ? '#10B981' : eq.battery > 20 ? '#F59E0B' : '#EF4444'}
+                      rx="3" 
+                    />
+                  </g>
+                )}
+              </g>
+            );
+          })}
+
           {/* Path visualization */}
           {path.length > 1 && (
             <g className="path-group">
@@ -311,6 +439,73 @@ function WarehouseFloorPlan({
       <div className="map-controls">
         <div className="zoom-info">
           <span>🔍 Click on any rack to see products</span>
+        </div>
+      </div>
+
+      {/* Equipment Tracking Panel */}
+      <div className="equipment-tracking-panel">
+        <div className="equipment-panel-header">
+          <h3>🔴 Live Equipment Tracking</h3>
+          <button 
+            className={`toggle-btn ${showEquipment ? 'active' : ''}`}
+            onClick={() => setShowEquipment(!showEquipment)}
+          >
+            {showEquipment ? 'Hide' : 'Show'}
+          </button>
+        </div>
+        
+        <div className="equipment-legend">
+          <div className="legend-section">
+            <span className="legend-title">Equipment Types:</span>
+            <div className="legend-items">
+              <span className="legend-item">
+                <span className="legend-icon" style={{ backgroundColor: equipmentColors.forklift }}>🚜</span>
+                Forklifts ({equipment.filter(e => e.type === 'forklift').length})
+              </span>
+              <span className="legend-item">
+                <span className="legend-icon" style={{ backgroundColor: equipmentColors.pallet_jack }}>🏗️</span>
+                Pallet Jacks ({equipment.filter(e => e.type === 'pallet_jack').length})
+              </span>
+              <span className="legend-item">
+                <span className="legend-icon" style={{ backgroundColor: equipmentColors.diagnostic_tool }}>📱</span>
+                Diagnostic Tools ({equipment.filter(e => e.type === 'diagnostic_tool').length})
+              </span>
+            </div>
+          </div>
+          <div className="legend-section">
+            <span className="legend-title">Status:</span>
+            <div className="legend-items">
+              <span className="status-item"><span className="status-dot" style={{ backgroundColor: statusColors.active }}></span>Active</span>
+              <span className="status-item"><span className="status-dot" style={{ backgroundColor: statusColors.idle }}></span>Idle</span>
+              <span className="status-item"><span className="status-dot" style={{ backgroundColor: statusColors.maintenance }}></span>Maintenance</span>
+              <span className="status-item"><span className="status-dot" style={{ backgroundColor: statusColors.charging }}></span>Charging</span>
+            </div>
+          </div>
+        </div>
+
+        <div className="equipment-list">
+          {equipment.map(eq => (
+            <div 
+              key={eq.id} 
+              className={`equipment-item ${eq.status}`}
+              onMouseEnter={() => setHoveredEquipment(eq.id)}
+              onMouseLeave={() => setHoveredEquipment(null)}
+            >
+              <span className="eq-icon" style={{ backgroundColor: equipmentColors[eq.type] }}>
+                {equipmentIcons[eq.type]}
+              </span>
+              <div className="eq-info">
+                <span className="eq-name">{eq.name}</span>
+                <span className="eq-operator">{eq.operator}</span>
+              </div>
+              <div className="eq-status">
+                <span className="status-badge" style={{ backgroundColor: statusColors[eq.status] }}>
+                  {eq.status}
+                </span>
+                <span className="eq-battery">🔋 {eq.battery}%</span>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </div>

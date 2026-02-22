@@ -1,7 +1,7 @@
 import { useState, useCallback, useEffect } from 'react';
 import { warehouseConfig, products, racks, categoryColors } from '../../data/warehouse';
 import { findShortestPath } from '../../utils/pathfinding';
-import { WarehouseFloorPlan, ProductSearch, PathGuide, Warehouse3D, WarehouseExterior, HeatMap } from '../Warehouse';
+import { WarehouseFloorPlan, ProductSearch, PathGuide, Warehouse3D, WarehouseExterior, HeatMap, ToolSelector } from '../Warehouse';
 import './WarehouseDashboard.css';
 
 function WarehouseDashboard() {
@@ -11,30 +11,82 @@ function WarehouseDashboard() {
   const [isAnimating, setIsAnimating] = useState(false);
   const [activeTab, setActiveTab] = useState('search');
   const [viewMode, setViewMode] = useState('exterior'); // 'exterior', '2d' or '3d'
+  const [showToolSelector, setShowToolSelector] = useState(false);
+  const [selectedTools, setSelectedTools] = useState([]);
+  const [pendingProduct, setPendingProduct] = useState(null);
 
-  // Calculate path when product is selected
-  useEffect(() => {
-    if (selectedProduct) {
-      const newPath = findShortestPath(
-        workerPosition.x,
-        workerPosition.y,
-        selectedProduct.x,
-        selectedProduct.y
-      );
-      setPath(newPath);
-    } else {
-      setPath([]);
+  // Calculate path with tool stops when tools are confirmed
+  const calculatePathWithTools = useCallback((product, tools) => {
+    if (!product) return [];
+    
+    let currentX = workerPosition.x;
+    let currentY = workerPosition.y;
+    let fullPath = [];
+
+    // Sort tools by distance from worker for optimal pickup order
+    const sortedTools = [...tools].sort((a, b) => {
+      const distA = Math.sqrt(Math.pow(a.x - currentX, 2) + Math.pow(a.y - currentY, 2));
+      const distB = Math.sqrt(Math.pow(b.x - currentX, 2) + Math.pow(b.y - currentY, 2));
+      return distA - distB;
+    });
+
+    // Calculate path through each tool pickup point
+    sortedTools.forEach(tool => {
+      const pathToTool = findShortestPath(currentX, currentY, tool.x, tool.y);
+      if (pathToTool.length > 0) {
+        // Skip first point if it overlaps with previous path end
+        const startIndex = fullPath.length > 0 ? 1 : 0;
+        fullPath = [...fullPath, ...pathToTool.slice(startIndex)];
+        currentX = tool.x;
+        currentY = tool.y;
+      }
+    });
+
+    // Finally, path to product
+    const pathToProduct = findShortestPath(currentX, currentY, product.x, product.y);
+    if (pathToProduct.length > 0) {
+      const startIndex = fullPath.length > 0 ? 1 : 0;
+      fullPath = [...fullPath, ...pathToProduct.slice(startIndex)];
     }
-  }, [selectedProduct, workerPosition]);
+
+    return fullPath;
+  }, [workerPosition]);
+
+  // Handle tool selection confirmation
+  const handleToolConfirm = useCallback((tools) => {
+    setSelectedTools(tools);
+    setShowToolSelector(false);
+    
+    if (pendingProduct) {
+      setSelectedProduct(pendingProduct);
+      
+      // Calculate path with tool stops
+      const newPath = tools.length > 0 
+        ? calculatePathWithTools(pendingProduct, tools)
+        : findShortestPath(workerPosition.x, workerPosition.y, pendingProduct.x, pendingProduct.y);
+      
+      setPath(newPath);
+      setPendingProduct(null);
+    }
+  }, [pendingProduct, calculatePathWithTools, workerPosition]);
 
   const handleProductSelect = useCallback((product) => {
-    setSelectedProduct(product);
+    if (product) {
+      // Show tool selector before proceeding
+      setPendingProduct(product);
+      setShowToolSelector(true);
+    } else {
+      setSelectedProduct(null);
+      setPath([]);
+    }
   }, []);
 
   const handleClearPath = useCallback(() => {
     setSelectedProduct(null);
     setPath([]);
     setWorkerPosition(warehouseConfig.workerStart);
+    setSelectedTools([]);
+    setPendingProduct(null);
   }, []);
 
   const handleStartNavigation = useCallback(() => {
@@ -153,6 +205,7 @@ function WarehouseDashboard() {
               <PathGuide
                 path={path}
                 selectedProduct={selectedProduct}
+                selectedTools={selectedTools}
                 onStartNavigation={handleStartNavigation}
                 onClearPath={handleClearPath}
               />
@@ -192,6 +245,11 @@ function WarehouseDashboard() {
               <div className="selected-info">
                 <span>📍 Selected: <strong>{selectedProduct.name}</strong></span>
                 <span className="rack-info">Rack {selectedProduct.rack} • Shelf {selectedProduct.shelf}</span>
+                {selectedTools.length > 0 && (
+                  <span className="tools-info">
+                    🧰 Tools: {selectedTools.map(t => t.icon).join(' ')}
+                  </span>
+                )}
               </div>
               <div className="action-buttons">
                 <button 
@@ -218,11 +276,24 @@ function WarehouseDashboard() {
           )}
         </div>
 
+        {/* Tool Selector Modal */}
+        <ToolSelector
+          isOpen={showToolSelector}
+          onClose={() => {
+            setShowToolSelector(false);
+            setPendingProduct(null);
+          }}
+          onConfirm={handleToolConfirm}
+          selectedProduct={pendingProduct}
+          workerPosition={workerPosition}
+        />
+
         {/* Right Panel - Path Guide (Desktop) */}
         <div className="right-panel">
           <PathGuide
             path={path}
             selectedProduct={selectedProduct}
+            selectedTools={selectedTools}
             onStartNavigation={handleStartNavigation}
             onClearPath={handleClearPath}
           />

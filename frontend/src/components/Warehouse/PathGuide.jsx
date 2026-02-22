@@ -1,7 +1,7 @@
 import { calculatePathDistance, calculateWalkingTime, getDirections } from '../../utils/pathfinding';
 import './PathGuide.css';
 
-function PathGuide({ path, selectedProduct, onStartNavigation, onClearPath }) {
+function PathGuide({ path, selectedProduct, selectedTools = [], onStartNavigation, onClearPath }) {
   if (!selectedProduct || path.length === 0) {
     return (
       <div className="path-guide-container empty">
@@ -26,6 +26,31 @@ function PathGuide({ path, selectedProduct, onStartNavigation, onClearPath }) {
           ✕ Clear
         </button>
       </div>
+
+      {/* Tool Pickup Info */}
+      {selectedTools.length > 0 && (
+        <div className="tool-pickup-card">
+          <div className="tool-pickup-header">
+            <span className="tool-pickup-icon">🧰</span>
+            <div>
+              <h4>Tools to Pick Up First</h4>
+              <span className="tool-pickup-count">{selectedTools.length} tool{selectedTools.length > 1 ? 's' : ''} required</span>
+            </div>
+          </div>
+          <div className="tool-pickup-list">
+            {selectedTools.map((tool, index) => (
+              <div key={tool.id} className="tool-pickup-item">
+                <span className="tool-order">{index + 1}</span>
+                <span className="tool-icon">{tool.icon}</span>
+                <div className="tool-details">
+                  <span className="tool-name">{tool.name}</span>
+                  <span className="tool-location">📍 {tool.location}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Destination info */}
       <div className="destination-card">

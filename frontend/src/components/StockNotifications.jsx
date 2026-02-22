@@ -2,6 +2,8 @@ import { useState, useMemo } from 'react'
 import './StockNotifications.css'
 
 function StockNotifications({ isOpen, onClose }) {
+  const [activeTab, setActiveTab] = useState('all')
+  
   // Mock stock arrival notifications
   const [notifications, setNotifications] = useState([
     {
@@ -83,6 +85,18 @@ function StockNotifications({ isOpen, onClose }) {
     }
   }, [notifications])
 
+  // Filter notifications based on active tab
+  const filteredNotifications = useMemo(() => {
+    switch (activeTab) {
+      case 'just_arrived':
+        return notifications.filter(n => n.status === 'just_arrived')
+      case 'high_priority':
+        return notifications.filter(n => n.priority === 'high')
+      default:
+        return notifications
+    }
+  }, [notifications, activeTab])
+
   const getStatusBadge = (status) => {
     switch (status) {
       case 'just_arrived':
@@ -160,20 +174,35 @@ function StockNotifications({ isOpen, onClose }) {
 
         {/* Tabs */}
         <div className="stock-tabs">
-          <button className="tab-btn active">All Items ({analysis.totalNotifications})</button>
-          <button className="tab-btn">Just Arrived ({analysis.justArrived})</button>
-          <button className="tab-btn">High Priority ({analysis.highPriority})</button>
+          <button 
+            className={`tab-btn ${activeTab === 'all' ? 'active' : ''}`}
+            onClick={() => setActiveTab('all')}
+          >
+            All Items ({analysis.totalNotifications})
+          </button>
+          <button 
+            className={`tab-btn ${activeTab === 'just_arrived' ? 'active' : ''}`}
+            onClick={() => setActiveTab('just_arrived')}
+          >
+            Just Arrived ({analysis.justArrived})
+          </button>
+          <button 
+            className={`tab-btn ${activeTab === 'high_priority' ? 'active' : ''}`}
+            onClick={() => setActiveTab('high_priority')}
+          >
+            High Priority ({analysis.highPriority})
+          </button>
         </div>
 
         {/* Notifications List */}
         <div className="stock-notifications-list">
-          {notifications.length === 0 ? (
+          {filteredNotifications.length === 0 ? (
             <div className="empty-state">
               <span className="empty-icon">📭</span>
               <p>No stock notifications</p>
             </div>
           ) : (
-            notifications.map((notification) => {
+            filteredNotifications.map((notification) => {
               const status = getStatusBadge(notification.status)
               return (
                 <div 

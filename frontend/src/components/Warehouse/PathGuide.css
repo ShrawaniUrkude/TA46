@@ -67,6 +67,86 @@
   color: #EF4444;
 }
 
+/* Tool Pickup Card */
+.tool-pickup-card {
+  background: linear-gradient(135deg, #7C3AED 0%, #5B21B6 100%);
+  border-radius: 10px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  color: #ffffff;
+}
+
+.tool-pickup-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.tool-pickup-icon {
+  font-size: 1.75rem;
+}
+
+.tool-pickup-header h4 {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.tool-pickup-count {
+  font-size: 0.75rem;
+  opacity: 0.85;
+}
+
+.tool-pickup-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.tool-pickup-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 0.6rem 0.75rem;
+  border-radius: 8px;
+}
+
+.tool-pickup-item .tool-order {
+  width: 22px;
+  height: 22px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.tool-pickup-item .tool-icon {
+  font-size: 1.25rem;
+}
+
+.tool-pickup-item .tool-details {
+  flex: 1;
+}
+
+.tool-pickup-item .tool-name {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.tool-pickup-item .tool-location {
+  display: block;
+  font-size: 0.7rem;
+  opacity: 0.8;
+}
+
 /* Destination card */
 .destination-card {
   background: linear-gradient(135deg, #10B981 0%, #059669 100%);

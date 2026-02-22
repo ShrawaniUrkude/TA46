@@ -2,12 +2,14 @@
 import AIAssistant from './AIAssistant'
 import EmergencyAlerts from './EmergencyAlerts'
 import StockNotifications from './StockNotifications'
+import ExpiryDashboard from './ExpiryDashboard'
 import './Navbar.css'
 
 function Navbar({ currentPage, onNavigate }) {
   const [showAI, setShowAI] = useState(false)
   const [showEmergency, setShowEmergency] = useState(false)
   const [showNotifications, setShowNotifications] = useState(false)
+  const [showExpiry, setShowExpiry] = useState(false)
 
   return (
     <>
@@ -40,6 +42,14 @@ function Navbar({ currentPage, onNavigate }) {
           </a>
         </nav>
         <div className="nav-actions">
+          <button 
+            className="expiry-dashboard-btn"
+            onClick={() => setShowExpiry(true)}
+            title="Expiry Dashboard"
+          >
+            <span className="expiry-btn-icon">⏰</span>
+            <span className="expiry-badge">2</span>
+          </button>
           <button 
             className="emergency-alert-btn"
             onClick={() => setShowEmergency(true)}
@@ -75,6 +85,9 @@ function Navbar({ currentPage, onNavigate }) {
 
       {/* Stock Notifications Panel */}
       <StockNotifications isOpen={showNotifications} onClose={() => setShowNotifications(false)} />
+
+      {/* Expiry Dashboard Panel */}
+      <ExpiryDashboard isOpen={showExpiry} onClose={() => setShowExpiry(false)} />
     </>
   )
 }
