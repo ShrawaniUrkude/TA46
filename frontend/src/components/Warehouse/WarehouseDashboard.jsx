@@ -126,7 +126,7 @@ function WarehouseDashboard() {
     <div className="warehouse-dashboard">
       <div className="dashboard-header">
         <div className="header-content">
-          <h1>📦 Amazon-Style Warehouse</h1>
+          <h1>📦 Smart Warehouse</h1>
           <p>Indoor Asset & Product Tracking System</p>
         </div>
         <div className="header-stats">

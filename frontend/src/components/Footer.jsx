@@ -5,8 +5,8 @@ function Footer() {
     <footer className="footer">
       <div className="footer-content">
         <div className="footer-section">
-          <h3>� WareTrack</h3>
-          <p>Amazon-style warehouse management with indoor product tracking. Find any item in seconds.</p>
+          <h3>📦 WareTrack</h3>
+          <p>Smart warehouse management with indoor product tracking. Find any item in seconds.</p>
         </div>
         <div className="footer-section">
           <h4>Features</h4>

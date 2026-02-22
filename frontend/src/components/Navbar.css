@@ -75,6 +75,118 @@
   gap: 1.5rem;
 }
 
+/* Hospital Dashboard Button */
+.hospital-dashboard-btn {
+  position: relative;
+  background: linear-gradient(135deg, rgba(236, 72, 153, 0.3) 0%, rgba(168, 85, 247, 0.2) 100%);
+  border: 2px solid rgba(236, 72, 153, 0.5);
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 0.7rem 0.9rem;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: hospitalPulse 3s ease-in-out infinite;
+}
+
+@keyframes hospitalPulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(236, 72, 153, 0.6);
+  }
+  50% {
+    box-shadow: 0 0 0 8px rgba(236, 72, 153, 0);
+  }
+}
+
+.hospital-dashboard-btn:hover {
+  background: linear-gradient(135deg, rgba(236, 72, 153, 0.5) 0%, rgba(168, 85, 247, 0.4) 100%);
+  border-color: rgba(236, 72, 153, 0.8);
+  transform: translateY(-3px);
+  box-shadow: 0 10px 30px rgba(236, 72, 153, 0.4);
+}
+
+.hospital-dashboard-btn:active {
+  transform: translateY(-1px);
+}
+
+.hospital-btn-icon {
+  font-size: 1.3rem;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+}
+
+.hospital-badge {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: linear-gradient(135deg, #EC4899 0%, #A855F7 100%);
+  color: #ffffff;
+  font-size: 0.55rem;
+  font-weight: 900;
+  padding: 0.25rem 0.5rem;
+  border-radius: 12px;
+  box-shadow: 0 3px 10px rgba(236, 72, 153, 0.5);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Carbon Dashboard Button */
+.carbon-dashboard-btn {
+  position: relative;
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.3) 0%, rgba(6, 95, 70, 0.2) 100%);
+  border: 2px solid rgba(16, 185, 129, 0.5);
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 0.7rem 0.9rem;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: carbonPulse 3s ease-in-out infinite;
+}
+
+@keyframes carbonPulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.6);
+  }
+  50% {
+    box-shadow: 0 0 0 8px rgba(16, 185, 129, 0);
+  }
+}
+
+.carbon-dashboard-btn:hover {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.5) 0%, rgba(6, 95, 70, 0.4) 100%);
+  border-color: rgba(16, 185, 129, 0.8);
+  transform: translateY(-3px);
+  box-shadow: 0 10px 30px rgba(16, 185, 129, 0.4);
+}
+
+.carbon-dashboard-btn:active {
+  transform: translateY(-1px);
+}
+
+.carbon-btn-icon {
+  font-size: 1.3rem;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+}
+
+.carbon-badge {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+  color: #ffffff;
+  font-size: 0.55rem;
+  font-weight: 900;
+  padding: 0.25rem 0.5rem;
+  border-radius: 12px;
+  box-shadow: 0 3px 10px rgba(16, 185, 129, 0.5);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
 /* Expiry Dashboard Button */
 .expiry-dashboard-btn {
   position: relative;
@@ -315,6 +427,58 @@
   color: #ffffff;
   font-size: 0.95rem;
   font-weight: 600;
+}
+
+.user-id {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.logout-btn {
+  background: rgba(239, 68, 68, 0.2);
+  border: none;
+  padding: 6px 8px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+  margin-left: 8px;
+}
+
+.logout-btn:hover {
+  background: rgba(239, 68, 68, 0.4);
+  transform: scale(1.1);
+}
+
+/* Login Button */
+.login-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background: linear-gradient(135deg, #3B82F6, #2563EB);
+  border: none;
+  border-radius: 12px;
+  color: white;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+}
+
+.login-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
+}
+
+.login-btn:active {
+  transform: translateY(0);
+}
+
+.login-btn span {
+  font-size: 1.1rem;
 }
 
 @media (max-width: 900px) {
