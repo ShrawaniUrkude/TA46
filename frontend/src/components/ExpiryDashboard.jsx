@@ -17,7 +17,10 @@ function ExpiryDashboard({ isOpen, onClose }) {
       daysLeft: 2,
       location: 'Rack C-1',
       priority: 'critical',
-      value: 450
+      value: 450,
+      recyclable: true,
+      recycleType: 'compost',
+      packaging: 'Tetra Pak'
     },
     {
       id: 2,
@@ -29,7 +32,10 @@ function ExpiryDashboard({ isOpen, onClose }) {
       daysLeft: 3,
       location: 'Rack C-2',
       priority: 'critical',
-      value: 320
+      value: 320,
+      recyclable: true,
+      recycleType: 'compost',
+      packaging: 'Plastic Container'
     },
     {
       id: 3,
@@ -41,7 +47,10 @@ function ExpiryDashboard({ isOpen, onClose }) {
       daysLeft: 4,
       location: 'Rack B-1',
       priority: 'high',
-      value: 135
+      value: 135,
+      recyclable: true,
+      recycleType: 'compost',
+      packaging: 'Paper Bag'
     },
     {
       id: 4,
@@ -53,7 +62,10 @@ function ExpiryDashboard({ isOpen, onClose }) {
       daysLeft: 6,
       location: 'Rack F-3',
       priority: 'high',
-      value: 1200
+      value: 1200,
+      recyclable: false,
+      recycleType: 'dispose',
+      packaging: 'Vacuum Sealed'
     },
     {
       id: 5,
@@ -65,7 +77,10 @@ function ExpiryDashboard({ isOpen, onClose }) {
       daysLeft: 5,
       location: 'Rack V-2',
       priority: 'high',
-      value: 180
+      value: 180,
+      recyclable: true,
+      recycleType: 'compost',
+      packaging: 'Plastic Clamshell'
     },
     {
       id: 6,
@@ -77,7 +92,10 @@ function ExpiryDashboard({ isOpen, onClose }) {
       daysLeft: 11,
       location: 'Rack D-1',
       priority: 'medium',
-      value: 360
+      value: 360,
+      recyclable: true,
+      recycleType: 'recycle',
+      packaging: 'PET Bottle'
     },
     {
       id: 7,
@@ -89,7 +107,10 @@ function ExpiryDashboard({ isOpen, onClose }) {
       daysLeft: 14,
       location: 'Rack C-3',
       priority: 'medium',
-      value: 280
+      value: 280,
+      recyclable: true,
+      recycleType: 'compost',
+      packaging: 'Wax Paper'
     },
     {
       id: 8,
@@ -101,7 +122,10 @@ function ExpiryDashboard({ isOpen, onClose }) {
       daysLeft: 21,
       location: 'Rack S-1',
       priority: 'low',
-      value: 450
+      value: 450,
+      recyclable: true,
+      recycleType: 'recycle',
+      packaging: 'Cardboard Box'
     }
   ])
 
@@ -119,23 +143,26 @@ function ExpiryDashboard({ isOpen, onClose }) {
         action: p.daysLeft <= 2 ? 'urgent' : p.daysLeft <= 4 ? 'priority' : 'normal'
       }))
   }, [products])
-
-  // Donation recommendations
-  const donationRecommendations = useMemo(() => {
+  // Recycle/Dispose recommendations
+  const recycleRecommendations = useMemo(() => {
     return products
-      .filter(p => p.daysLeft <= 5 && p.quantity > 20)
+      .filter(p => p.daysLeft <= 7)
       .map(p => ({
         ...p,
-        donationPartner: p.category === 'Dairy' || p.category === 'Meat' 
-          ? 'Local Food Bank' 
-          : p.category === 'Bakery' 
-            ? 'Community Kitchen'
-            : 'Homeless Shelter',
-        taxBenefit: Math.round(p.value * 0.3),
-        suggestedQty: Math.round(p.quantity * 0.4)
+        disposalMethod: p.recycleType === 'compost' 
+          ? 'Organic Composting' 
+          : p.recycleType === 'recycle' 
+            ? 'Packaging Recycling'
+            : 'Safe Disposal',
+        disposalPartner: p.recycleType === 'compost'
+          ? 'Green Earth Composting'
+          : p.recycleType === 'recycle'
+            ? 'EcoRecycle Partners'
+            : 'Certified Waste Management',
+        envImpact: p.recyclable ? 'Low Carbon' : 'Standard',
+        processingCost: Math.round(p.value * 0.05)
       }))
   }, [products])
-
   // Analysis stats
   const stats = useMemo(() => {
     const critical = products.filter(p => p.priority === 'critical').length
@@ -155,12 +182,12 @@ function ExpiryDashboard({ isOpen, onClose }) {
         return products.filter(p => p.priority === 'critical' || p.priority === 'high')
       case 'suggestions':
         return usageSuggestions
-      case 'donations':
-        return donationRecommendations
+      case 'recycle':
+        return recycleRecommendations
       default:
         return products
     }
-  }, [products, activeTab, usageSuggestions, donationRecommendations])
+  }, [products, activeTab, usageSuggestions, recycleRecommendations])
 
   const getPriorityColor = (priority) => {
     switch (priority) {
@@ -286,10 +313,10 @@ function ExpiryDashboard({ isOpen, onClose }) {
             <span>💡</span> Usage Tips
           </button>
           <button 
-            className={`expiry-tab ${activeTab === 'donations' ? 'active' : ''}`}
-            onClick={() => setActiveTab('donations')}
+            className={`expiry-tab ${activeTab === 'recycle' ? 'active' : ''}`}
+            onClick={() => setActiveTab('recycle')}
           >
-            <span>🤝</span> Donations
+            <span>♻️</span> Recycle/Dispose
           </button>
         </div>
 
@@ -355,42 +382,53 @@ function ExpiryDashboard({ isOpen, onClose }) {
                 </div>
               ))}
             </div>
-          ) : (
-            <div className="donations-list">
-              <div className="donations-header">
-                <h3>🤝 Donation Recommendations</h3>
-                <p>Partner with local organizations to reduce waste and get tax benefits</p>
+          ) : activeTab === 'recycle' ? (
+            <div className="recycle-list">
+              <div className="recycle-header">
+                <h3>♻️ Recycle & Dispose Options</h3>
+                <p>Eco-friendly disposal methods for expired or expiring products</p>
               </div>
               {filteredProducts.map(product => (
-                <div key={product.id} className="donation-card">
-                  <div className="donation-product">
+                <div key={product.id} className={`recycle-card ${product.recycleType}`}>
+                  <div className="recycle-product">
                     <span className="category-icon large">{getCategoryIcon(product.category)}</span>
-                    <div className="donation-product-info">
+                    <div className="recycle-product-info">
                       <h4>{product.name}</h4>
-                      <p>{product.quantity} units available • Expires {product.expiryDate}</p>
+                      <p>{product.quantity} units • Expires {product.expiryDate}</p>
+                      <span className="packaging-tag">📦 {product.packaging}</span>
                     </div>
                   </div>
-                  <div className="donation-details">
-                    <div className="donation-partner">
-                      <span className="partner-icon">🏛️</span>
+                  <div className="recycle-details">
+                    <div className="disposal-method">
+                      <span className="method-icon">
+                        {product.recycleType === 'compost' ? '🌱' : product.recycleType === 'recycle' ? '♻️' : '🗑️'}
+                      </span>
                       <div>
-                        <span className="partner-label">Recommended Partner</span>
-                        <span className="partner-name">{product.donationPartner}</span>
+                        <span className="method-label">Disposal Method</span>
+                        <span className="method-name">{product.disposalMethod}</span>
                       </div>
                     </div>
-                    <div className="donation-stats">
-                      <div className="donation-stat">
-                        <span className="stat-value">{product.suggestedQty}</span>
-                        <span className="stat-label">Suggested Qty</span>
+                    <div className="disposal-partner">
+                      <span className="partner-icon">🏭</span>
+                      <div>
+                        <span className="partner-label">Processing Partner</span>
+                        <span className="partner-name">{product.disposalPartner}</span>
                       </div>
-                      <div className="donation-stat highlight">
-                        <span className="stat-value">₹{product.taxBenefit}</span>
-                        <span className="stat-label">Tax Benefit</span>
+                    </div>
+                    <div className="recycle-stats">
+                      <div className="recycle-stat">
+                        <span className={`env-badge ${product.recyclable ? 'eco' : 'standard'}`}>
+                          {product.recyclable ? '🌿 Eco-Friendly' : '⚠️ Standard'}
+                        </span>
+                      </div>
+                      <div className="recycle-stat">
+                        <span className="stat-value">₹{product.processingCost}</span>
+                        <span className="stat-label">Est. Cost</span>
                       </div>
                     </div>
                   </div>
-                  <div className="donation-actions">
-                    <button className="donate-btn">
+                  <div className="recycle-actions">
+                    <button className="recycle-btn">
                       <span>📦</span> Schedule Pickup
                     </button>
                     <button className="contact-btn">
@@ -399,24 +437,31 @@ function ExpiryDashboard({ isOpen, onClose }) {
                   </div>
                 </div>
               ))}
-              <div className="donation-summary">
+              <div className="recycle-summary">
                 <div className="summary-item">
                   <span className="summary-icon">🌱</span>
                   <div>
-                    <span className="summary-value">{filteredProducts.reduce((sum, p) => sum + p.suggestedQty, 0)} units</span>
-                    <span className="summary-label">Potential Donations</span>
+                    <span className="summary-value">{filteredProducts.filter(p => p.recycleType === 'compost').length} items</span>
+                    <span className="summary-label">Compostable</span>
                   </div>
                 </div>
                 <div className="summary-item">
-                  <span className="summary-icon">💵</span>
+                  <span className="summary-icon">♻️</span>
                   <div>
-                    <span className="summary-value">₹{filteredProducts.reduce((sum, p) => sum + p.taxBenefit, 0)}</span>
-                    <span className="summary-label">Est. Tax Benefits</span>
+                    <span className="summary-value">{filteredProducts.filter(p => p.recycleType === 'recycle').length} items</span>
+                    <span className="summary-label">Recyclable Packaging</span>
+                  </div>
+                </div>
+                <div className="summary-item">
+                  <span className="summary-icon">💰</span>
+                  <div>
+                    <span className="summary-value">₹{filteredProducts.reduce((sum, p) => sum + p.processingCost, 0)}</span>
+                    <span className="summary-label">Total Processing Cost</span>
                   </div>
                 </div>
               </div>
             </div>
-          )}
+          ) : null}
         </div>
 
         {/* Footer */}

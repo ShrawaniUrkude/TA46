@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import './Analytics.css';
 
 function Analytics() {
@@ -10,14 +10,16 @@ function Analytics() {
     efficiency: 0,
   });
 
-  // Animate values on mount
+  // Metrics data based on time range
+  const metricsData = {
+    daily: { timeSaved: 8, costSaved: 2100, ordersProcessed: 720, efficiency: 91 },
+    weekly: { timeSaved: 58, costSaved: 14500, ordersProcessed: 4800, efficiency: 92 },
+    month: { timeSaved: 2100, costSaved: 540000, ordersProcessed: 180000, efficiency: 92 },
+  };
+
+  // Animate values on mount and when timeRange changes
   useEffect(() => {
-    const targets = {
-      timeSaved: 2100,
-      costSaved: 540000,
-      ordersProcessed: 180000,
-      efficiency: 92,
-    };
+    const targets = metricsData[timeRange] || metricsData.month;
 
     const duration = 1500;
     const steps = 50;
@@ -40,7 +42,7 @@ function Analytics() {
     }, interval);
 
     return () => clearInterval(timer);
-  }, []);
+  }, [timeRange]);
 
   // Time savings data
   const timeSavingsData = {
@@ -71,45 +73,130 @@ function Analytics() {
 
   // Profit data
   const profitData = {
-    monthly: [
-      { month: 'Jan', laborCost: 85000, savings: 32000, revenue: 520000 },
-      { month: 'Feb', laborCost: 82000, savings: 38000, revenue: 548000 },
-      { month: 'Mar', laborCost: 78000, savings: 42000, revenue: 575000 },
-      { month: 'Apr', laborCost: 75000, savings: 48000, revenue: 598000 },
-      { month: 'May', laborCost: 72000, savings: 52000, revenue: 625000 },
-      { month: 'Jun', laborCost: 70000, savings: 58000, revenue: 652000 },
+    daily: [
+      { label: 'Mon', laborCost: 2800, savings: 1100, revenue: 17500 },
+      { label: 'Tue', laborCost: 2750, savings: 1200, revenue: 18200 },
+      { label: 'Wed', laborCost: 2600, savings: 1300, revenue: 19000 },
+      { label: 'Thu', laborCost: 2500, savings: 1400, revenue: 19800 },
+      { label: 'Fri', laborCost: 2400, savings: 1500, revenue: 20500 },
+      { label: 'Sat', laborCost: 2350, savings: 1550, revenue: 21200 },
+      { label: 'Sun', laborCost: 2300, savings: 1600, revenue: 21800 },
+    ],
+    weekly: [
+      { label: 'Week 1', laborCost: 19200, savings: 8500, revenue: 135000 },
+      { label: 'Week 2', laborCost: 18500, savings: 9200, revenue: 142000 },
+      { label: 'Week 3', laborCost: 17800, savings: 10000, revenue: 148000 },
+      { label: 'Week 4', laborCost: 17200, savings: 10800, revenue: 155000 },
+    ],
+    month: [
+      { label: 'Jan', laborCost: 85000, savings: 32000, revenue: 520000 },
+      { label: 'Feb', laborCost: 82000, savings: 38000, revenue: 548000 },
+      { label: 'Mar', laborCost: 78000, savings: 42000, revenue: 575000 },
+      { label: 'Apr', laborCost: 75000, savings: 48000, revenue: 598000 },
+      { label: 'May', laborCost: 72000, savings: 52000, revenue: 625000 },
+      { label: 'Jun', laborCost: 70000, savings: 58000, revenue: 652000 },
     ],
   };
 
   // Worker productivity data
-  const workerProductivity = [
-    { name: 'Worker #142', ordersPerHour: 28, avgPickTime: 2.1, accuracy: 99.5 },
-    { name: 'Worker #089', ordersPerHour: 26, avgPickTime: 2.3, accuracy: 99.2 },
-    { name: 'Worker #215', ordersPerHour: 25, avgPickTime: 2.4, accuracy: 98.9 },
-    { name: 'Worker #067', ordersPerHour: 24, avgPickTime: 2.5, accuracy: 99.1 },
-    { name: 'Worker #193', ordersPerHour: 23, avgPickTime: 2.6, accuracy: 98.7 },
-  ];
+  const workerProductivityData = {
+    daily: [
+      { name: 'Worker #142', ordersPerHour: 30, avgPickTime: 2.0, accuracy: 99.8 },
+      { name: 'Worker #089', ordersPerHour: 28, avgPickTime: 2.2, accuracy: 99.5 },
+      { name: 'Worker #215', ordersPerHour: 27, avgPickTime: 2.3, accuracy: 99.1 },
+      { name: 'Worker #067', ordersPerHour: 26, avgPickTime: 2.4, accuracy: 99.3 },
+      { name: 'Worker #193', ordersPerHour: 25, avgPickTime: 2.5, accuracy: 98.9 },
+    ],
+    weekly: [
+      { name: 'Worker #142', ordersPerHour: 29, avgPickTime: 2.1, accuracy: 99.6 },
+      { name: 'Worker #089', ordersPerHour: 27, avgPickTime: 2.3, accuracy: 99.3 },
+      { name: 'Worker #215', ordersPerHour: 26, avgPickTime: 2.4, accuracy: 99.0 },
+      { name: 'Worker #067', ordersPerHour: 25, avgPickTime: 2.5, accuracy: 99.2 },
+      { name: 'Worker #193', ordersPerHour: 24, avgPickTime: 2.6, accuracy: 98.8 },
+    ],
+    month: [
+      { name: 'Worker #142', ordersPerHour: 28, avgPickTime: 2.1, accuracy: 99.5 },
+      { name: 'Worker #089', ordersPerHour: 26, avgPickTime: 2.3, accuracy: 99.2 },
+      { name: 'Worker #215', ordersPerHour: 25, avgPickTime: 2.4, accuracy: 98.9 },
+      { name: 'Worker #067', ordersPerHour: 24, avgPickTime: 2.5, accuracy: 99.1 },
+      { name: 'Worker #193', ordersPerHour: 23, avgPickTime: 2.6, accuracy: 98.7 },
+    ],
+  };
 
   // Category performance
-  const categoryPerformance = [
-    { category: 'Electronics', picks: 12500, avgTime: 2.1, revenue: 185000 },
-    { category: 'Clothing', picks: 18200, avgTime: 1.8, revenue: 142000 },
-    { category: 'Home & Garden', picks: 9800, avgTime: 2.4, revenue: 98000 },
-    { category: 'Sports', picks: 7500, avgTime: 2.2, revenue: 75000 },
-  ];
+  const categoryPerformanceData = {
+    daily: [
+      { category: 'Electronics', picks: 420, avgTime: 2.0, revenue: 6200 },
+      { category: 'Clothing', picks: 610, avgTime: 1.7, revenue: 4800 },
+      { category: 'Home & Garden', picks: 330, avgTime: 2.3, revenue: 3300 },
+      { category: 'Sports', picks: 250, avgTime: 2.1, revenue: 2500 },
+    ],
+    weekly: [
+      { category: 'Electronics', picks: 3100, avgTime: 2.1, revenue: 46000 },
+      { category: 'Clothing', picks: 4500, avgTime: 1.8, revenue: 35500 },
+      { category: 'Home & Garden', picks: 2400, avgTime: 2.4, revenue: 24500 },
+      { category: 'Sports', picks: 1850, avgTime: 2.2, revenue: 18500 },
+    ],
+    month: [
+      { category: 'Electronics', picks: 12500, avgTime: 2.1, revenue: 185000 },
+      { category: 'Clothing', picks: 18200, avgTime: 1.8, revenue: 142000 },
+      { category: 'Home & Garden', picks: 9800, avgTime: 2.4, revenue: 98000 },
+      { category: 'Sports', picks: 7500, avgTime: 2.2, revenue: 75000 },
+    ],
+  };
 
   // ROI breakdown
-  const roiBreakdown = [
-    { item: 'Labor Cost Reduction', annual: 320000, percentage: 59 },
-    { item: 'Error Rate Reduction', annual: 85000, percentage: 16 },
-    { item: 'Increased Throughput', annual: 95000, percentage: 18 },
-    { item: 'Training Time Saved', annual: 40000, percentage: 7 },
-  ];
+  const roiBreakdownData = {
+    daily: [
+      { item: 'Labor Cost Reduction', amount: 880, percentage: 59 },
+      { item: 'Error Rate Reduction', amount: 235, percentage: 16 },
+      { item: 'Increased Throughput', amount: 260, percentage: 18 },
+      { item: 'Training Time Saved', amount: 110, percentage: 7 },
+    ],
+    weekly: [
+      { item: 'Labor Cost Reduction', amount: 6200, percentage: 59 },
+      { item: 'Error Rate Reduction', amount: 1650, percentage: 16 },
+      { item: 'Increased Throughput', amount: 1850, percentage: 18 },
+      { item: 'Training Time Saved', amount: 780, percentage: 7 },
+    ],
+    month: [
+      { item: 'Labor Cost Reduction', amount: 320000, percentage: 59 },
+      { item: 'Error Rate Reduction', amount: 85000, percentage: 16 },
+      { item: 'Increased Throughput', amount: 95000, percentage: 18 },
+      { item: 'Training Time Saved', amount: 40000, percentage: 7 },
+    ],
+  };
 
-  const totalROI = roiBreakdown.reduce((sum, item) => sum + item.annual, 0);
-
+  // Get current data based on time range
   const currentTimeSavings = timeSavingsData[timeRange] || timeSavingsData.month;
+  const currentProfitData = profitData[timeRange] || profitData.month;
+  const currentWorkerProductivity = workerProductivityData[timeRange] || workerProductivityData.month;
+  const currentCategoryPerformance = categoryPerformanceData[timeRange] || categoryPerformanceData.month;
+  const currentRoiBreakdown = roiBreakdownData[timeRange] || roiBreakdownData.month;
+  
+  const totalROI = currentRoiBreakdown.reduce((sum, item) => sum + item.amount, 0);
+  const maxSavings = Math.max(...currentProfitData.map(d => d.savings));
+  const maxPicks = Math.max(...currentCategoryPerformance.map(c => c.picks));
   const maxTime = Math.max(...currentTimeSavings.map(d => Math.max(d.beforeMinutes, d.afterMinutes)));
+
+  // Get time period label
+  const getTimeLabel = () => {
+    switch (timeRange) {
+      case 'daily': return 'Today';
+      case 'weekly': return 'This Week';
+      case 'month': return 'Annual';
+      default: return 'Annual';
+    }
+  };
+
+  const getComparisonLabel = () => {
+    switch (timeRange) {
+      case 'daily': return 'vs yesterday';
+      case 'weekly': return 'vs last week';
+      case 'month': return 'vs last year';
+      default: return 'vs last year';
+    }
+  };
 
   return (
     <div className="analytics-page">
@@ -147,24 +234,24 @@ function Analytics() {
           <div className="metric-content">
             <span className="metric-value">{animatedValues.timeSaved.toLocaleString()}</span>
             <span className="metric-unit">hours</span>
-            <span className="metric-label">Annual Time Saved</span>
-            <span className="metric-change positive">↑ 42% vs last year</span>
+            <span className="metric-label">{getTimeLabel()} Time Saved</span>
+            <span className="metric-change positive">↑ 42% {getComparisonLabel()}</span>
           </div>
         </div>
         <div className="metric-card money">
           <div className="metric-icon">💰</div>
           <div className="metric-content">
-            <span className="metric-value">₹{(animatedValues.costSaved / 1000).toFixed(0)}K</span>
-            <span className="metric-label">Annual Cost Savings</span>
-            <span className="metric-change positive">↑ ₹125K vs last year</span>
+            <span className="metric-value">₹{animatedValues.costSaved >= 1000 ? `${(animatedValues.costSaved / 1000).toFixed(0)}K` : animatedValues.costSaved}</span>
+            <span className="metric-label">{getTimeLabel()} Cost Savings</span>
+            <span className="metric-change positive">↑ 28% {getComparisonLabel()}</span>
           </div>
         </div>
         <div className="metric-card orders">
           <div className="metric-icon">📦</div>
           <div className="metric-content">
-            <span className="metric-value">{(animatedValues.ordersProcessed / 1000).toFixed(0)}K</span>
-            <span className="metric-label">Orders Processed (YTD)</span>
-            <span className="metric-change positive">↑ 35% throughput</span>
+            <span className="metric-value">{animatedValues.ordersProcessed >= 1000 ? `${(animatedValues.ordersProcessed / 1000).toFixed(0)}K` : animatedValues.ordersProcessed}</span>
+            <span className="metric-label">Orders Processed ({getTimeLabel()})</span>
+            <span className="metric-change positive">↑ 35% {getComparisonLabel()}</span>
           </div>
         </div>
         <div className="metric-card efficiency">
@@ -172,7 +259,7 @@ function Analytics() {
           <div className="metric-content">
             <span className="metric-value">{animatedValues.efficiency}%</span>
             <span className="metric-label">Operational Efficiency</span>
-            <span className="metric-change positive">↑ 18 points</span>
+            <span className="metric-change positive">↑ 18 points {getComparisonLabel()}</span>
           </div>
         </div>
       </div>
@@ -276,18 +363,18 @@ function Analytics() {
         <h2>💰 Profit & Cost Analysis</h2>
         <div className="section-grid">
           <div className="chart-card">
-            <h3>Monthly Financial Impact</h3>
+            <h3>{timeRange === 'daily' ? 'Daily' : timeRange === 'weekly' ? 'Weekly' : 'Monthly'} Financial Impact</h3>
             <div className="financial-chart">
-              {profitData.monthly.map((data, index) => (
+              {currentProfitData.map((data, index) => (
                 <div key={index} className="financial-row">
-                  <span className="month-label">{data.month}</span>
+                  <span className="month-label">{data.label}</span>
                   <div className="financial-bars">
                     <div className="fin-bar-group">
                       <div 
                         className="fin-bar savings" 
-                        style={{ width: `${(data.savings / 60000) * 100}%` }}
+                        style={{ width: `${(data.savings / maxSavings) * 100}%` }}
                       >
-                        <span>${(data.savings / 1000).toFixed(0)}K</span>
+                        <span>₹{data.savings >= 1000 ? `${(data.savings / 1000).toFixed(0)}K` : data.savings}</span>
                       </div>
                       <span className="fin-label">Savings</span>
                     </div>
@@ -298,18 +385,18 @@ function Analytics() {
           </div>
 
           <div className="chart-card">
-            <h3>ROI Breakdown</h3>
+            <h3>ROI Breakdown ({getTimeLabel()})</h3>
             <div className="roi-chart">
               <div className="roi-total">
-                <span className="roi-value">${(totalROI / 1000).toFixed(0)}K</span>
-                <span className="roi-label">Total Annual ROI</span>
+                <span className="roi-value">₹{totalROI >= 1000 ? `${(totalROI / 1000).toFixed(0)}K` : totalROI}</span>
+                <span className="roi-label">Total {getTimeLabel()} ROI</span>
               </div>
               <div className="roi-items">
-                {roiBreakdown.map((item, index) => (
+                {currentRoiBreakdown.map((item, index) => (
                   <div key={index} className="roi-item">
                     <div className="roi-item-header">
                       <span className="roi-item-name">{item.item}</span>
-                      <span className="roi-item-value">${(item.annual / 1000).toFixed(0)}K</span>
+                      <span className="roi-item-value">₹{item.amount >= 1000 ? `${(item.amount / 1000).toFixed(0)}K` : item.amount}</span>
                     </div>
                     <div className="roi-bar-container">
                       <div 
@@ -403,7 +490,7 @@ function Analytics() {
 
       {/* Worker Productivity */}
       <div className="analytics-section">
-        <h2>👷 Worker Productivity</h2>
+        <h2>👷 Worker Productivity ({getTimeLabel()})</h2>
         <div className="productivity-table">
           <div className="table-header">
             <span>Worker</span>
@@ -412,7 +499,7 @@ function Analytics() {
             <span>Accuracy</span>
             <span>Performance</span>
           </div>
-          {workerProductivity.map((worker, index) => (
+          {currentWorkerProductivity.map((worker, index) => (
             <div key={index} className="table-row">
               <span className="worker-name">
                 <span className="rank">#{index + 1}</span>
@@ -436,13 +523,13 @@ function Analytics() {
 
       {/* Category Performance */}
       <div className="analytics-section">
-        <h2>📁 Category Performance</h2>
+        <h2>📁 Category Performance ({getTimeLabel()})</h2>
         <div className="category-grid">
-          {categoryPerformance.map((cat, index) => (
+          {currentCategoryPerformance.map((cat, index) => (
             <div key={index} className="category-card">
               <div className="category-header">
                 <span className="category-name">{cat.category}</span>
-                <span className="category-revenue">${(cat.revenue / 1000).toFixed(0)}K</span>
+                <span className="category-revenue">₹{cat.revenue >= 1000 ? `${(cat.revenue / 1000).toFixed(0)}K` : cat.revenue}</span>
               </div>
               <div className="category-stats">
                 <div className="cat-stat">
@@ -457,7 +544,7 @@ function Analytics() {
               <div className="category-bar">
                 <div 
                   className="cat-progress" 
-                  style={{ width: `${(cat.picks / 20000) * 100}%` }}
+                  style={{ width: `${(cat.picks / maxPicks) * 100}%` }}
                 ></div>
               </div>
             </div>
