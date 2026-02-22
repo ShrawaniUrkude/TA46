@@ -1,0 +1,59 @@
+#root {
+  width: 100%;
+  min-height: 100vh;
+}
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: #F3F4F6;
+}
+
+.content {
+  padding-top: 60px;
+  flex: 1;
+}
+
+.content h1 {
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: #1F2937;
+}
+
+.content p {
+  color: #1F2937;
+  font-size: 1.25rem;
+  max-width: 600px;
+  margin-bottom: 2rem;
+}
+
+.cta-button {
+  background-color: #F59E0B;
+  color: #ffffff;
+  border: none;
+  padding: 1rem 2.5rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 14px rgba(245, 158, 11, 0.4);
+}
+
+.cta-button:hover {
+  background-color: #D97706;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(217, 119, 6, 0.5);
+}
+
+.highlight-section {
+  background-color: #FEF3C7;
+  padding: 3rem 2rem;
+  border-radius: 12px;
+  margin-top: 2rem;
+  max-width: 800px;
+  width: 100%;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}

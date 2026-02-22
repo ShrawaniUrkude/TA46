@@ -1,0 +1,160 @@
+.floor-plan-container {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.floor-plan-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.floor-plan-header h2 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #1F2937;
+  margin: 0;
+}
+
+.category-legend {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.category-legend .legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.8rem;
+  color: #6B7280;
+}
+
+.category-legend .legend-color {
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+}
+
+.floor-plan-wrapper {
+  background: #F3F4F6;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 2px solid #E5E7EB;
+}
+
+.floor-plan-svg {
+  width: 100%;
+  height: auto;
+  display: block;
+  min-height: 400px;
+}
+
+.rack-group {
+  transition: transform 0.2s ease;
+}
+
+.rack-group:hover {
+  transform: scale(1.02);
+}
+
+/* Animated path */
+.animated-path {
+  animation: dash 1s linear infinite;
+}
+
+@keyframes dash {
+  to {
+    stroke-dashoffset: -15;
+  }
+}
+
+/* Worker pulse animation */
+.worker-pulse {
+  animation: workerPulse 2s ease-in-out infinite;
+}
+
+@keyframes workerPulse {
+  0%, 100% {
+    r: 18;
+    opacity: 0.4;
+  }
+  50% {
+    r: 25;
+    opacity: 0.1;
+  }
+}
+
+/* Destination pulse */
+.destination-pulse {
+  animation: destPulse 1s ease-in-out infinite;
+}
+
+@keyframes destPulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.15);
+  }
+}
+
+/* Product marker pulse */
+.product-pulse {
+  animation: productPulse 1.5s ease-in-out infinite;
+}
+
+@keyframes productPulse {
+  0%, 100% {
+    r: 15;
+    opacity: 0.5;
+  }
+  50% {
+    r: 22;
+    opacity: 0.2;
+  }
+}
+
+/* Worker marker animation when moving */
+.worker-marker.animating {
+  transition: transform 0.3s ease;
+}
+
+.map-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid #E5E7EB;
+}
+
+.zoom-info {
+  font-size: 0.85rem;
+  color: #6B7280;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .floor-plan-container {
+    padding: 1rem;
+  }
+  
+  .floor-plan-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .category-legend {
+    gap: 0.5rem;
+  }
+  
+  .category-legend .legend-item {
+    font-size: 0.7rem;
+  }
+}

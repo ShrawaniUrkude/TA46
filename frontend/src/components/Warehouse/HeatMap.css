@@ -1,0 +1,342 @@
+.heatmap-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  height: 100%;
+  min-height: 600px;
+}
+
+/* Controls */
+.heatmap-controls {
+  display: flex;
+  justify-content: center;
+  padding: 0.5rem;
+}
+
+.view-type-selector {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 0.375rem;
+  border-radius: 0.5rem;
+}
+
+.selector-label {
+  color: #94a3b8;
+  font-size: 0.875rem;
+  margin-right: 0.5rem;
+  padding-left: 0.5rem;
+}
+
+.view-type-selector button {
+  padding: 0.5rem 1rem;
+  border: none;
+  background: transparent;
+  color: #94a3b8;
+  border-radius: 0.375rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 0.8rem;
+  white-space: nowrap;
+}
+
+.view-type-selector button:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+.view-type-selector button.active {
+  background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+  color: #fff;
+}
+
+/* Main SVG Area */
+.heatmap-main {
+  flex: 1;
+  position: relative;
+  background: #1a1a2e;
+  border-radius: 1rem;
+  overflow: hidden;
+  min-height: 400px;
+}
+
+.heatmap-svg {
+  width: 100%;
+  height: 100%;
+}
+
+.heatmap-rack {
+  transition: all 0.2s ease;
+}
+
+.heatmap-rack:hover rect {
+  filter: brightness(1.2);
+}
+
+/* Tooltip */
+.heatmap-tooltip {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: rgba(15, 23, 42, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0.75rem;
+  padding: 1rem;
+  min-width: 220px;
+  max-width: 280px;
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+  z-index: 100;
+}
+
+.tooltip-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.tooltip-rack-id {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.tooltip-category {
+  font-size: 0.75rem;
+  color: #94a3b8;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+}
+
+.tooltip-stats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.tooltip-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.5rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 0.5rem;
+}
+
+.tooltip-stat .stat-icon {
+  font-size: 1rem;
+  margin-bottom: 0.25rem;
+}
+
+.tooltip-stat .stat-value {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.tooltip-stat .stat-label {
+  font-size: 0.625rem;
+  color: #94a3b8;
+  text-transform: uppercase;
+}
+
+.tooltip-stat.warning {
+  background: rgba(239, 68, 68, 0.2);
+  grid-column: span 2;
+  flex-direction: row;
+  gap: 0.5rem;
+}
+
+.tooltip-stat.warning .stat-value {
+  color: #ef4444;
+}
+
+/* Tooltip Products */
+.tooltip-products {
+  max-height: 150px;
+  overflow-y: auto;
+}
+
+.products-title {
+  font-size: 0.75rem;
+  color: #94a3b8;
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.product-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.375rem 0.5rem;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 0.25rem;
+  margin-bottom: 0.25rem;
+  font-size: 0.75rem;
+}
+
+.product-item .product-name {
+  color: #e2e8f0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 150px;
+}
+
+.product-item .product-qty {
+  color: #10b981;
+  font-weight: 600;
+}
+
+.product-item.low-stock {
+  background: rgba(239, 68, 68, 0.15);
+}
+
+.product-item.low-stock .product-qty {
+  color: #ef4444;
+}
+
+/* Legend */
+.heatmap-legend {
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 0.75rem;
+}
+
+.legend-title {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 0.75rem;
+  text-align: center;
+}
+
+.legend-bar {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.legend-gradient {
+  height: 12px;
+  border-radius: 6px;
+  width: 100%;
+}
+
+.legend-labels {
+  display: flex;
+  justify-content: space-between;
+}
+
+.legend-labels span {
+  font-size: 0.75rem;
+  color: #94a3b8;
+}
+
+.legend-warning {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.warning-dot {
+  width: 16px;
+  height: 16px;
+  background: #ef4444;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  flex-shrink: 0;
+}
+
+.legend-warning span:last-child {
+  font-size: 0.75rem;
+  color: #94a3b8;
+}
+
+/* Summary Stats */
+.heatmap-summary {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.75rem;
+}
+
+.summary-card {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 0.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.summary-card.warning {
+  background: rgba(239, 68, 68, 0.1);
+  border-color: rgba(239, 68, 68, 0.3);
+}
+
+.summary-icon {
+  font-size: 1.5rem;
+}
+
+.summary-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.summary-value {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.summary-label {
+  font-size: 0.75rem;
+  color: #94a3b8;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .view-type-selector {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .view-type-selector button {
+    padding: 0.375rem 0.75rem;
+    font-size: 0.75rem;
+  }
+
+  .heatmap-summary {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .heatmap-tooltip {
+    position: fixed;
+    top: auto;
+    bottom: 1rem;
+    right: 1rem;
+    left: 1rem;
+    max-width: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .heatmap-summary {
+    grid-template-columns: 1fr;
+  }
+
+  .selector-label {
+    display: none;
+  }
+}

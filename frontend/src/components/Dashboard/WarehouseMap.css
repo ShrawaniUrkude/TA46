@@ -1,0 +1,115 @@
+.warehouse-map-container {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.map-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.map-header h2 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #1F2937;
+  margin: 0;
+}
+
+.map-legend {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  color: #6B7280;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.dot.active {
+  background-color: #10B981;
+}
+
+.dot.idle {
+  background-color: #F59E0B;
+}
+
+.dot.maintenance {
+  background-color: #EF4444;
+}
+
+.dot.offline {
+  background-color: #6B7280;
+}
+
+.map-wrapper {
+  background: #F9FAFB;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #E5E7EB;
+}
+
+.warehouse-svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.asset-marker {
+  transition: transform 0.2s ease;
+}
+
+.asset-marker:hover {
+  transform: scale(1.1);
+}
+
+.pulse-ring {
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    r: 16;
+    opacity: 0.4;
+  }
+  50% {
+    r: 24;
+    opacity: 0.1;
+  }
+  100% {
+    r: 16;
+    opacity: 0.4;
+  }
+}
+
+.selection-ring {
+  animation: selectionPulse 1.5s infinite;
+}
+
+@keyframes selectionPulse {
+  0%, 100% {
+    stroke-opacity: 1;
+  }
+  50% {
+    stroke-opacity: 0.5;
+  }
+}
+
+.tooltip {
+  pointer-events: none;
+}
